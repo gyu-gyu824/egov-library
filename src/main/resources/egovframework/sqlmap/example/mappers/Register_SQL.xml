@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="egovframework.example.sample.library.service.impl.MemberMapper">
+	<resultMap id="Member"
+		type="egovframework.example.sample.library.service.MemberVO">
+		<id property="memberId" column="member_id" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="name" column="name" />
+		<result property="phone" column="phone" />
+		<result property="role" column="role" />
+		<result property="joinDate" column="join_date" />
+	</resultMap>
+	
+	<select id="checkUsername" parameterType="String" resultType="int">
+		select count(*) from member where username = #{username}
+	</select>
+	
+	<insert id="insertMember" parameterType="memberVO" useGeneratedKeys="true" keyProperty="memberId">
+		INSERT INTO member (username, password, name, phone, role)
+		VALUES (#{username}, #{password}, #{name}, #{phone}, #{role})
+	</insert>
+	
+	</mapper>

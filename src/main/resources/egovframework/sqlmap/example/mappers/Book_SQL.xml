@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="egovframework.example.sample.library.service.impl.BookMapper">
+	<resultMap id="book"
+		type="egovframework.example.sample.library.service.BookVO">
+		<id property="bookId" column="book_id" />
+		<result property="title" column="title" />
+		<result property="author" column="author" />
+		<result property="publisher" column="publisher" />
+		<result property="status" column="status" />
+	</resultMap>
+
+	<resultMap id="bookWithLoanInfo"
+		type="egovframework.example.sample.library.service.BookVO">
+		<id property="bookId" column="book_id" />
+		<result property="title" column="title" />
+		<result property="author" column="author" />
+		<result property="publisher" column="publisher" />
+		<result property="status" column="status" />
+		<result property="loanDate" column="loan_date" />
+		<result property="returnDate" column="return_date" />
+	</resultMap>
+
+	<select id="searchKeyword" parameterType="bookVO"
+		resultMap="book">
+		SELECT * FROM book
+		<where>
+			<if test="searchKeyword != null and searchKeyword != ''">
+				(title LIKE CONCAT ('%', #{searchKeyword}, '%')
+				or author
+				LIKE CONCAT ('%', #{searchKeyword}, '%'))
+			</if>
+			AND management_status = 'ACTIVE'
+		</where>
+		ORDER BY book_id DESC
+	</select>
+
+	<select id="selectAllBooks" resultMap="book">
+		SELECT * FROM book
+		where management_status = 'ACTIVE' 
+		ORDER BY book_id DESC
+	</select>
+
+	<select id="selectBookById" parameterType="int" resultMap="book">
+		SELECT * FROM book WHERE book_id = #{bookId}
+	</select>
+
+	<select id="selectBooksByMemberId" parameterType="int"
+		resultMap="bookWithLoanInfo">
+		SELECT
+		b.book_id, b.title,
+		b.author,
+		b.publisher,
+		b.status,
+		l.loan_date,
+		l.return_date
+		FROM book b
+		JOIN loan l ON b.book_id =
+		l.book_id
+		WHERE l.member_id = #{memberId} AND l.status = 'loaned'
+	</select>
+
+	<select id="loanList" parameterType="int" resultMap="bookWithLoanInfo">
+		SELECT
+		b.book_id,
+		b.title,
+		b.author,
+		b.publisher,
+		l.loan_date,
+		l.return_date,
+		l.status
+		FROM book b
+		JOIN loan l ON b.book_id = l.book_id
+		where l.member_id = #{member_id}
+		ORDER BY loan_date DESC
+	</select>
+
+	<insert id="insertBook" parameterType="bookVO"
+		useGeneratedKeys="true" keyProperty="bookId">
+		INSERT INTO book (title, author,
+		publisher, status)
+		VALUES (#{title}, #{author}, #{publisher},
+		#{status})
+	</insert>
+
+	<update id="updateBook" parameterType="bookVO">
+		UPDATE book
+		<set>
+			<if test="title != null">
+				title = #{title},
+			</if>
+			<if test="author != null">
+				author = #{author},
+			</if>
+			<if test="publisher != null">
+				publisher = #{publisher},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+		</set>
+		WHERE title = #{title}
+	</update>
+	
+	<update id="returnBook">
+		UPDATE loan SET status =
+		'returned', return_date = NOW()
+		WHERE
+		book_id =
+		#{bookId} AND member_id
+		= #{memberId} AND
+		status = 'loaned'
+	</update>
+	
+	<update id="availableBook" parameterType="int">
+		UPDATE book SET status
+		= 'available'
+		where book_id = #{bookId} and
+		status = 'unavailable'
+	</update>
+	
+	<update id="deleteBook" parameterType="int">
+		UPDATE book SET management_status = 'REMOVED'
+		where book_id = #{bookId}
+	</update>
+
+	<insert id="insertLoan">
+		INSERT INTO
+		loan(member_id, book_id,
+		loan_date, status)
+		VALUES(#{memberId},
+		#{bookId}, NOW(), 'loaned')
+	</insert>
+	
+	<update id="modifyStatusBook" parameterType="int">
+		UPDATE book SET
+		status = 'unavailable'
+		where book_id = #{bookId} and status =
+		'available'
+	</update>
+	
+</mapper>
