@@ -2,7 +2,9 @@ package egovframework.example.sample.library.web;
 
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -31,16 +33,15 @@ public class libraryController {
 
 
 	@RequestMapping(value = "/bookLoan.do")
-	public String library(ModelMap model, @RequestParam(value="searchKeyword", required=false) String searchKeyword) throws Exception {
-		List<BookVO> bookList;
-		if (searchKeyword != null && !searchKeyword.isEmpty()) {
-			BookVO searchVO = new BookVO();
-			searchVO.setSearchKeyword(searchKeyword);
-			bookList = bookService.searchKeyword(searchVO);
-		}
-		else {
-			bookList = bookService.selectAllBooks();
-		}
+	public String library(ModelMap model, BookVO bookVO) throws Exception {
+		
+		int totalCount = bookService.countAllBooks(bookVO);
+		
+		bookVO.setTotalCount(totalCount);
+		
+		List<BookVO> bookList = bookService.selectBookList(bookVO);
+		
+		model.addAttribute("pagination", bookVO);
 		model.addAttribute("bookList", bookList);
 		return "/library/bookLoan";
 	}
@@ -76,7 +77,7 @@ public class libraryController {
 
 
 	@RequestMapping(value= "/myLoans.do", method=RequestMethod.GET)
-	public String myLoans(HttpServletRequest request, ModelMap model) throws Exception{
+	public String myLoans(HttpServletRequest request, ModelMap model, BookVO bookVO) throws Exception{
 		HttpSession session = request.getSession();
 		LoginVO loginVO = (LoginVO) session.getAttribute("loginVO");
 		
@@ -85,43 +86,60 @@ public class libraryController {
 		}
 		
 		int memberId = loginVO.getMemberId();
-		List<BookVO> myLoanList = bookService.selectBooksByMemberId(memberId);
+		bookVO.setMemberId(memberId);
+		
+		int totalCount = bookService.countMyLoans(bookVO);
+		
+		bookVO.setTotalCount(totalCount);
+		
+		List<BookVO> myLoanList = bookService.selectMyLoans(bookVO);
+		
+		model.addAttribute("pagination", bookVO);
 		model.addAttribute("myLoanList", myLoanList);
 		
 		return "/library/myLoan";
 		
 	}
 	
-	@RequestMapping(value="/returnBook.do",method=RequestMethod.POST)
-	public String returnBook(HttpServletRequest request, ModelMap model, @RequestParam("bookId") int bookId) throws Exception{
+	@RequestMapping(value="/returnBook.do", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> returnBook(HttpServletRequest request, @RequestParam("bookId") int bookId) throws Exception{
+		Map<String, Object> result = new HashMap<>();
+		
 		HttpSession session = request.getSession();
 		LoginVO loginVO = (LoginVO) session.getAttribute("loginVO");
 		
-		int memberId = loginVO.getMemberId();
-		
-		bookService.availableBook(bookId, memberId);
-		
-		bookService.returnBook(bookId, memberId);
-		
-		List<BookVO> myLoanList = bookService.selectBooksByMemberId(memberId);
-		
-		model.addAttribute("myLoanList", myLoanList);
-		
-		System.out.println(myLoanList);
-		
-		return "/library/myLoan";
-
+		try {
+			int memberId = loginVO.getMemberId();
+			
+			bookService.availableBook(bookId, memberId);
+			
+			bookService.returnBook(bookId, memberId);
+			
+			result.put("sueccess", true);
+			result.put("message", "반납이 완료되었습니다");
+		} catch (Exception e) {
+			result.put("success", false);
+			result.put("message", "반납에 실패하였습니다");
+		}
+		return result;
 	}
 	
 	@RequestMapping(value="/loanList.do")
-	public String loanList(HttpServletRequest request, ModelMap model) throws Exception{
+	public String loanList(HttpServletRequest request, ModelMap model, BookVO bookVO) throws Exception{
 		HttpSession session = request.getSession();
 		LoginVO loginVO = (LoginVO) session.getAttribute("loginVO");
 		
 		int memberId = loginVO.getMemberId();
+		bookVO.setMemberId(memberId);
 		
-		List<BookVO> loanHistory = bookService.loanList(memberId);
+		int totalCount = bookService.countLoanList(bookVO);
 		
+		bookVO.setTotalCount(totalCount);
+		
+		List<BookVO> loanHistory = bookService.selectLoanList(bookVO);
+		
+		model.addAttribute("pagination", bookVO);
 		model.addAttribute("loanHistory", loanHistory);
 		
 		return "/library/loanList";

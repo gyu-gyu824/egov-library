@@ -16,13 +16,38 @@ public class BookServiceImpl extends EgovAbstractServiceImpl implements BookServ
 	private BookMapper bookMapper;
 	
 	@Override
-	public List<BookVO> selectAllBooks() throws Exception{
-		return bookMapper.selectAllBooks();
+	public int countAllBooks(BookVO bookVO) throws Exception{
+		return bookMapper.countAllBooks(bookVO);
+	}
+	
+	@Override
+	public List<BookVO> selectBookList(BookVO bookVO) throws Exception{
+		return bookMapper.selectBookList(bookVO);
 	}
 	
 	@Override 
 	public BookVO selectBookById(int bookId) throws Exception{
 		return bookMapper.selectBookById(bookId);
+	}
+	
+	@Override
+	public int countMyLoans(BookVO bookVO) throws Exception{
+		return bookMapper.countMyLoans(bookVO);
+	}
+	
+	@Override
+	public List<BookVO> selectMyLoans(BookVO bookVO) throws Exception{
+		return bookMapper.selectMyLoans(bookVO);
+	}
+	
+	@Override
+	public int countLoanList(BookVO bookVO) throws Exception{
+		return bookMapper.countLoanList(bookVO);
+	}
+	
+	@Override
+	public List<BookVO> selectLoanList(BookVO bookVO) throws Exception{
+		return bookMapper.selectLoanList(bookVO);
 	}
 	
 	@Override
@@ -38,16 +63,6 @@ public class BookServiceImpl extends EgovAbstractServiceImpl implements BookServ
 	@Override
 	public int deleteBook(int bookId) throws Exception{
 		return bookMapper.deleteBook(bookId);
-	}
-	
-	@Override
-	public List<BookVO> searchKeyword(BookVO bookVO) throws Exception{
-		return bookMapper.searchKeyword(bookVO);
-	}
-	
-	@Override
-	public List<BookVO> selectBooksByMemberId(int memberId) throws Exception{
-		return bookMapper.selectBooksByMemberId(memberId);
 	}
 	
     @Override
@@ -70,10 +85,6 @@ public class BookServiceImpl extends EgovAbstractServiceImpl implements BookServ
 		return bookMapper.availableBook(bookId, memberId);
 	}
 	
-	@Override
-	public List<BookVO> loanList(int memberId) throws Exception{
-		return bookMapper.loanList(memberId);
-	}
 	
 
 }

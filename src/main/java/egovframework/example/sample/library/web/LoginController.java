@@ -43,10 +43,10 @@ public class LoginController {
 		if (resultVO != null) {
 			HttpSession session = request.getSession();
 			session.setAttribute("loginVO", resultVO);
-			return "/library/bookLoan";
+			return "redirect:/bookLoan.do";
 		}
 		else {
-			return "redirect:/library/login";
+			return "redirect:/login.do";
 		}
 	}
 	@RequestMapping(value = "/logout.do")

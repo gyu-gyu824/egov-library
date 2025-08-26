@@ -27,10 +27,15 @@ public class AdminController {
 	
 	
 	@RequestMapping(value="/bookList.do")
-	public String admin(ModelMap model) throws Exception{
+	public String admin(ModelMap model, BookVO bookVO) throws Exception{
 		
-		List<BookVO> bookList = bookService.selectAllBooks();
+		int totalCount = bookService.countAllBooks(bookVO);
 		
+		bookVO.setTotalCount(totalCount);
+		
+		List<BookVO> bookList = bookService.selectBookList(bookVO);
+		
+		model.addAttribute("pagination", bookVO);
 		model.addAttribute("bookList", bookList);
 		
 		return "/library/admin/bookList";
