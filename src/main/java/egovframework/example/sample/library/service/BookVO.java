@@ -11,16 +11,25 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookVO extends PaginationVO implements Serializable {
+public class BookVO extends SampleDefaultVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int bookId;
+    
     private String title;
+    
     private String author;
+    
     private String publisher;
+    
     private String status;
+    
     private String searchKeyword; 
+    
     private Date loanDate;
+    
     private Date returnDate;
+    
     private int memberId;
+    
 }

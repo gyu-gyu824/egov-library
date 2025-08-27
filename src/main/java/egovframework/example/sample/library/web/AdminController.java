@@ -4,8 +4,9 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,15 +28,23 @@ public class AdminController {
 	
 	
 	@RequestMapping(value="/bookList.do")
-	public String admin(ModelMap model, BookVO bookVO) throws Exception{
+	public String admin(Model model, BookVO bookVO) throws Exception{
+		
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(bookVO.getPageIndex());
+		paginationInfo.setRecordCountPerPage(bookVO.getPageUnit());
+		paginationInfo.setPageSize(bookVO.getPageSize());
+		
+		bookVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+		bookVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
 		
 		int totalCount = bookService.countAllBooks(bookVO);
-		
-		bookVO.setTotalCount(totalCount);
+		paginationInfo.setTotalRecordCount(totalCount);
 		
 		List<BookVO> bookList = bookService.selectBookList(bookVO);
 		
-		model.addAttribute("pagination", bookVO);
+		model.addAttribute("bookVO",bookVO);
+		model.addAttribute("paginationInfo", paginationInfo);
 		model.addAttribute("bookList", bookList);
 		
 		return "/library/admin/bookList";
@@ -43,7 +52,7 @@ public class AdminController {
 	
 	
 	@RequestMapping(value="/editBook.do")
-	public String editBook(ModelMap model, @RequestParam("bookId") int bookId) throws Exception{
+	public String editBook(Model model, @RequestParam("bookId") int bookId) throws Exception{
 		
 		BookVO bookVO = bookService.selectBookById(bookId);
 		

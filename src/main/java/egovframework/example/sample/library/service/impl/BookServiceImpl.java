@@ -15,6 +15,7 @@ public class BookServiceImpl extends EgovAbstractServiceImpl implements BookServ
 	@Resource(name="bookMapper")
 	private BookMapper bookMapper;
 	
+	
 	@Override
 	public int countAllBooks(BookVO bookVO) throws Exception{
 		return bookMapper.countAllBooks(bookVO);

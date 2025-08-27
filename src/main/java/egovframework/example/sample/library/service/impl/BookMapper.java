@@ -11,6 +11,7 @@ import egovframework.example.sample.library.service.BookVO;
 
 @Mapper("bookMapper")
 public interface BookMapper {
+	
 	int countAllBooks(BookVO bookVO);
 	
 	List<BookVO> selectBookList(BookVO bookVO);
