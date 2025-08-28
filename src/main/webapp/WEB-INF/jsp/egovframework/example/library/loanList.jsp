@@ -53,7 +53,6 @@
                     <table class="table table-striped table-hover">
                         <thead class="table-dark">
                             <tr>
-                                <th>ID</th>
                                 <th>제목</th>
                                 <th>저자</th>
                                 <th>대여일</th>
@@ -63,8 +62,7 @@
                         </thead>
                         <tbody>
                             <c:forEach var="book" items="${loanHistory}">
-                                <tr>
-                                    <td><c:out value="${book.bookId}" /></td>
+                                <tr> 
                                     <td><c:out value="${book.title}" /></td>
                                     <td><c:out value="${book.author}" /></td>
                                     <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${book.loanDate}" /></td>

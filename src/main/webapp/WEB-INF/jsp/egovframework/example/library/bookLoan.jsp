@@ -65,7 +65,6 @@
                     <table class="table table-striped table-hover">
                         <thead class="table-dark">
                             <tr>
-                                <th>ID</th>
                                 <th>제목</th>
                                 <th>저자</th>
                                 <th>출판사</th>
@@ -75,7 +74,6 @@
                         <tbody>
                             <c:forEach var="book" items="${bookList}">
                                 <tr>
-                                    <td><c:out value="${book.bookId}" /></td>
                                     <td>
                                         <a href="<c:url value='/bookDetail.do?bookId=${book.bookId}'/>"
                                            data-status="${book.status}"

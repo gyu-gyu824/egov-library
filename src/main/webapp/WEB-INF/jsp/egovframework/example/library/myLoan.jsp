@@ -75,7 +75,6 @@
                     <table class="table table-striped table-hover">
                         <thead class="table-dark">
                             <tr>
-                                <th>ID</th>
                                 <th>제목</th>
                                 <th>저자</th>
                                 <th>출판사</th>
@@ -87,7 +86,6 @@
                         <tbody>
                             <c:forEach var="book" items="${myLoanList}">
                                 <tr>
-                                    <td><c:out value="${book.bookId}" /></td>
                                     <td><c:out value="${book.title}" /></td>
                                     <td><c:out value="${book.author}" /></td>
                                     <td><c:out value="${book.publisher}" /></td>

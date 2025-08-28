@@ -32,4 +32,8 @@ public class BookVO extends SampleDefaultVO implements Serializable {
     
     private int memberId;
     
+    private int totalQuantity;
+    
+    private int currentQuantity;
+    
 }
