@@ -40,6 +40,10 @@ public interface BookMapper {
     
     int increaseBookQuantity(int bookId);
     
+    BookVO findBookByTitleAndAuthor(BookVO bookVO);
+    
+    int increaseBookStock(BookVO bookVO);
+    
     
     
     

@@ -61,7 +61,8 @@
 	<select id="selectBookById" parameterType="int" resultMap="book">
 		SELECT
 		book_id, title, author, publisher,
-		total_quantity, current_quantity
+		total_quantity,
+		current_quantity
 		FROM book
 		WHERE book_id = #{bookId}
 	</select>
@@ -185,13 +186,6 @@
 		'loaned'
 	</update>
 
-	<update id="decreaseBookQuantity">
-		UPDATE book
-		SET current_quantity = current_quantity -
-		1
-		WHERE book_id = #{bookId} AND current_quantity > 0
-	</update>
-
 	<update id="deleteBook" parameterType="int">
 		UPDATE book SET
 		management_status = 'REMOVED'
@@ -210,6 +204,26 @@
 		UPDATE book
 		SET current_quantity = current_quantity +
 		1
+		WHERE book_id = #{bookId}
+	</update>
+
+	<update id="decreaseBookQuantity">
+		UPDATE book
+		SET current_quantity = current_quantity -
+		1
+		WHERE book_id = #{bookId} AND current_quantity > 0
+	</update>
+	
+	<select id="findBookByTitleAndAuthor" parameterType="bookVO" resultMap="book">
+		SELECT *
+		FROM book
+		WHERE title=#{title} 
+		AND author=#{author}
+	</select>
+	
+	<update id="increaseBookStock" parameterType="bookVO" >
+		UPDATE book SET total_quantity = total_quantity + #{totalQuantity},
+						current_quantity = current_quantity + #{currentQuantity}
 		WHERE book_id = #{bookId}
 	</update>
 

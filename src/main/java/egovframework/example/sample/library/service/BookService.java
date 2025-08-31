@@ -28,10 +28,12 @@ public interface BookService {
 	
 	int insertLoan(int bookId, int memberId) throws Exception;	
 	
-	int modifyStatusBook(int bookId, int memberId) throws Exception;
+	int decreaseBookQuantity(int bookId) throws Exception;
 	
-	int availableBook(int bookId, int memberId) throws Exception;
+	int increaseBookQuantity(int bookId) throws Exception;
 	
+    BookVO findBookByTitleAndAuthor(BookVO bookVO) throws Exception;
+    
+    int increaseBookStock(BookVO bookVO) throws Exception;
 	
-
 }
