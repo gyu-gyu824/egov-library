@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import egovframework.example.sample.library.service.BookService;
 import egovframework.example.sample.library.service.BookVO;
@@ -52,8 +53,19 @@ public class BookServiceImpl extends EgovAbstractServiceImpl implements BookServ
 	}
 	
 	@Override
+	@Transactional
 	public int insertBook(BookVO bookVO) throws Exception{
-		return bookMapper.insertBook(bookVO);
+		
+		BookVO existingBook = bookMapper.findBookByTitleAndAuthor(bookVO);
+		
+		if (existingBook != null) {
+			bookVO.setBookId(existingBook.getBookId());
+			
+			return bookMapper.increaseBookStock(bookVO);
+		} else {
+			bookVO.setCurrentQuantity(bookVO.getTotalQuantity());
+			return bookMapper.insertBook(bookVO);
+		}
 	}
 	
 	@Override
@@ -67,25 +79,44 @@ public class BookServiceImpl extends EgovAbstractServiceImpl implements BookServ
 	}
 	
     @Override
+    @Transactional
     public int returnBook(int bookId, int memberId) throws Exception{
+    	
+    	bookMapper.increaseBookQuantity(bookId);
+    	
         return bookMapper.returnBook(bookId, memberId);
     }
 	
 	@Override
+	@Transactional
 	public int insertLoan(int bookId, int memberId) throws Exception{
+		
+		int updateCount = bookMapper.decreaseBookQuantity(bookId);
+		
+		if (updateCount ==  0) {
+			throw new Exception("대여 가능한 책의 재고가 없습니다");
+		}
+		
 		return bookMapper.insertLoan(bookId, memberId);
 	}
 	
 	@Override
-	public int modifyStatusBook(int bookId, int memberId) throws Exception{
-		return bookMapper.modifyStatusBook(bookId, memberId);
+	public int decreaseBookQuantity(int bookId) throws Exception{
+		return bookMapper.decreaseBookQuantity(bookId);
 	}
 	
 	@Override
-	public int availableBook(int bookId, int memberId) throws Exception{
-		return bookMapper.availableBook(bookId, memberId);
+	public int increaseBookQuantity(int bookId) throws Exception{
+		return bookMapper.increaseBookQuantity(bookId);
 	}
 	
-	
+	@Override
+	public BookVO findBookByTitleAndAuthor(BookVO bookVO) throws Exception {
+	    return bookMapper.findBookByTitleAndAuthor(bookVO);
+	}
 
+	@Override
+	public int increaseBookStock(BookVO bookVO) throws Exception {
+	    return bookMapper.increaseBookStock(bookVO);
+	}
 }

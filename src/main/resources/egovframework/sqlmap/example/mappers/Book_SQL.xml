@@ -8,7 +8,8 @@
 		<result property="title" column="title" />
 		<result property="author" column="author" />
 		<result property="publisher" column="publisher" />
-		<result property="status" column="status" />
+		<result property="totalQuantity" column="total_quantity" />
+		<result property="currentQuantity" column="current_quantity" />
 	</resultMap>
 
 	<resultMap id="bookWithLoanInfo"
@@ -17,7 +18,8 @@
 		<result property="title" column="title" />
 		<result property="author" column="author" />
 		<result property="publisher" column="publisher" />
-		<result property="status" column="status" />
+		<result property="totalQuantity" column="total_quantity" />
+		<result property="currentQuantity" column="current_quantity" />
 		<result property="loanDate" column="loan_date" />
 		<result property="returnDate" column="return_date" />
 		<result property="memberId" column="member_id" />
@@ -41,7 +43,8 @@
 	<select id="selectBookList" parameterType="bookVO"
 		resultMap="book">
 		SELECT
-		book_id, title, author, publisher, status
+		book_id, title, author, publisher, total_quantity,
+		current_quantity
 		FROM book
 		<where>
 			<if test="searchKeyword != null and searchKeyword != ''">
@@ -56,7 +59,12 @@
 	</select>
 
 	<select id="selectBookById" parameterType="int" resultMap="book">
-		SELECT * FROM book WHERE book_id = #{bookId}
+		SELECT
+		book_id, title, author, publisher,
+		total_quantity,
+		current_quantity
+		FROM book
+		WHERE book_id = #{bookId}
 	</select>
 
 	<select id="countMyLoans" parameterType="bookVO"
@@ -78,7 +86,8 @@
 	<select id="selectMyLoans" parameterType="bookVO"
 		resultMap="bookWithLoanInfo">
 		SELECT
-		b.book_id, b.title, b.author, b.publisher, b.status,
+		b.book_id, b.title, b.author, b.publisher, b.total_quantity,
+		b.current_quantity,
 		l.loan_date
 		FROM book b
 		JOIN loan l ON b.book_id =
@@ -103,7 +112,8 @@
 			l.member_id = #{memberId}
 			<if test="searchKeyword != null and searchKeyword != ''">
 				AND (b.title LIKE CONCAT('%', #{searchKeyword}, '%')
-				OR b.author LIKE CONCAT('%', #{searchKeyword}, '%'))
+				OR
+				b.author LIKE CONCAT('%', #{searchKeyword}, '%'))
 			</if>
 		</where>
 	</select>
@@ -115,11 +125,14 @@
 		b.title,
 		b.author,
 		b.publisher,
+		b.total_quantity,
+		b.current_quantity,
 		l.loan_date,
 		l.return_date,
 		l.status
 		FROM book b
-		JOIN loan l ON b.book_id = l.book_id
+		JOIN
+		loan l ON b.book_id = l.book_id
 		where l.member_id = #{memberId}
 		<if test="searchKeyword != null and searchKeyword != ''">
 			AND (b.title LIKE CONCAT('%', #{searchKeyword}, '%')
@@ -133,9 +146,10 @@
 	<insert id="insertBook" parameterType="bookVO"
 		useGeneratedKeys="true" keyProperty="bookId">
 		INSERT INTO book (title, author,
-		publisher, status)
-		VALUES (#{title}, #{author}, #{publisher},
-		#{status})
+		publisher, total_quantity, current_quantity)
+		VALUES (#{title},
+		#{author}, #{publisher},
+		#{totalQuantity}, #{currentQuantity})
 	</insert>
 
 	<update id="updateBook" parameterType="bookVO">
@@ -150,11 +164,14 @@
 			<if test="publisher != null">
 				publisher = #{publisher},
 			</if>
-			<if test="status != null">
-				status = #{status},
+			<if test="totalQuantity != null">
+				total_quantity = #{totalQuantity},
+			</if>
+			<if test="currentQuantity != null">
+				current_quantity = #{currentQuantity},
 			</if>
 		</set>
-		WHERE title = #{title}
+		WHERE book_id = #{bookId}
 	</update>
 
 	<update id="returnBook">
@@ -167,13 +184,6 @@
 		= #{memberId} AND
 		status =
 		'loaned'
-	</update>
-
-	<update id="availableBook" parameterType="int">
-		UPDATE book SET status
-		= 'available'
-		where book_id = #{bookId} and
-		status = 'unavailable'
 	</update>
 
 	<update id="deleteBook" parameterType="int">
@@ -190,11 +200,31 @@
 		#{bookId}, NOW(), 'loaned')
 	</insert>
 
-	<update id="modifyStatusBook" parameterType="int">
-		UPDATE book SET
-		status = 'unavailable'
-		where book_id = #{bookId} and status =
-		'available'
+	<update id="increaseBookQuantity">
+		UPDATE book
+		SET current_quantity = current_quantity +
+		1
+		WHERE book_id = #{bookId}
+	</update>
+
+	<update id="decreaseBookQuantity">
+		UPDATE book
+		SET current_quantity = current_quantity -
+		1
+		WHERE book_id = #{bookId} AND current_quantity > 0
+	</update>
+	
+	<select id="findBookByTitleAndAuthor" parameterType="bookVO" resultMap="book">
+		SELECT *
+		FROM book
+		WHERE title=#{title} 
+		AND author=#{author}
+	</select>
+	
+	<update id="increaseBookStock" parameterType="bookVO" >
+		UPDATE book SET total_quantity = total_quantity + #{totalQuantity},
+						current_quantity = current_quantity + #{currentQuantity}
+		WHERE book_id = #{bookId}
 	</update>
 
 </mapper>

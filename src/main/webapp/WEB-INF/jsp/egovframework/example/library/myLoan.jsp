@@ -12,26 +12,19 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
-    // 페이지 이동을 위한 표준 JavaScript 함수
     function fn_link_page(pageNo){
         document.listForm.pageIndex.value = pageNo;
         document.listForm.action = "<c:url value='/myLoans.do'/>";
         document.listForm.submit();
     }
-
-    // 검색을 위한 표준 JavaScript 함수
     function fn_search() {
-        document.listForm.pageIndex.value = 1; // 검색 시에는 항상 1페이지로 이동
+        document.listForm.pageIndex.value = 1;
         document.listForm.submit();
     }
-
-    // 로그아웃 함수
     function out() {
         location.href = "<c:url value='/logout.do'/>";
     }
-    
-    // 반납 함수 (AJAX)
-    function returnBook(buttonElement, bookId) {
+    function returnBook(bookId) {
         if (confirm("이 책을 반납하시겠습니까?")) {
             $.ajax({
                 url: "<c:url value='/returnBook.do'/>",
@@ -40,7 +33,7 @@
                 success: function(response) {
                     if (response.success) {
                         alert(response.message);
-                        location.reload(); // 성공 시 페이지 새로고침
+                        location.reload();
                     } else {
                         alert(response.message);
                     }
@@ -59,7 +52,7 @@
             <h2 class="mb-4">📚 내 대여 현황</h2>
 
             <nav class="mb-4">
-                <a href="<c:url value='/bookLoan.do'/>" class="btn btn-outline-primary me-2">도서 목록</a> 
+                <a href="<c:url value='/bookLoan.do'/>" class="btn btn-outline-secondary me-2">도서 목록</a> 
                 <a href="<c:url value='/myLoans.do'/>" class="btn btn-primary">대여 현황</a>
                 <a href="<c:url value='/loanList.do'/>" class="btn btn-outline-secondary">대여 기록</a>  
                 <a href="#" onclick="out()" class="btn btn-outline-danger">로그아웃</a>
@@ -75,26 +68,22 @@
                     <table class="table table-striped table-hover">
                         <thead class="table-dark">
                             <tr>
-                                <th>ID</th>
                                 <th>제목</th>
                                 <th>저자</th>
                                 <th>출판사</th>
                                 <th>대여일</th>
-                                <th>상태</th>
                                 <th>반납</th>
                             </tr>
                         </thead>
                         <tbody>
                             <c:forEach var="book" items="${myLoanList}">
                                 <tr>
-                                    <td><c:out value="${book.bookId}" /></td>
                                     <td><c:out value="${book.title}" /></td>
                                     <td><c:out value="${book.author}" /></td>
                                     <td><c:out value="${book.publisher}" /></td>
                                     <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${book.loanDate}" /></td>
-                                    <td><span class="badge bg-danger">대여 중</span></td>
                                     <td>
-                                        <button type="button" class="btn btn-warning btn-sm" onclick="returnBook(this, ${book.bookId})">반납</button>
+                                        <button type="button" class="btn btn-warning btn-sm" onclick="returnBook(${book.bookId})">반납</button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -104,7 +93,6 @@
                     <div class="d-flex justify-content-center">
                         <ui:pagination paginationInfo="${paginationInfo}" type="bootstrap" jsFunction="fn_link_page" />
                     </div>
-
                 </c:when>
                 <c:otherwise>
                     <div class="alert alert-warning text-center p-5 mt-4">

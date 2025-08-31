@@ -27,12 +27,15 @@
                     <label for="publisher" class="form-label">출판사</label>
                     <input type="text" name="publisher" id="publisher" class="form-control" required placeholder="출판사 이름을 입력하세요">
                 </div>
+                <div class="mb-3">
+    				<label for="totalQuantity" class="form-label">총 보유 수량</label>
+   				    <input type="number" name="totalQuantity" id="totalQuantity" class="form-control" required value="1" min="1">
+				</div>
+				<div class="mb-3">
+    				<label for="currentQuantity" class="form-label">현재 대여 가능 수량</label>
+   					<input type="number" name="currentQuantity" id="currentQuantity" class="form-control" required value="1" min="0">
+				</div>
                 
-                <%-- 
-                    새 책의 상태(status)는 기본적으로 '대여 가능(available)'이므로, 
-                    컨트롤러에서 DB에 저장할 때 기본값으로 설정해주는 것이 좋습니다.
-                    폼에서는 입력받을 필요가 없습니다.
-                --%>
                 
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary">등록하기</button>

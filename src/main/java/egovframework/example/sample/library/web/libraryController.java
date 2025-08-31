@@ -79,7 +79,6 @@ public class libraryController {
 		
 		int memberId = loginVO.getMemberId();
 		
-		bookService.modifyStatusBook(bookId, memberId);
 		
 		bookService.insertLoan(bookId, memberId);
 		
@@ -135,8 +134,6 @@ public class libraryController {
 		
 		try {
 			int memberId = loginVO.getMemberId();
-			
-			bookService.availableBook(bookId, memberId);
 			
 			bookService.returnBook(bookId, memberId);
 			

@@ -11,14 +11,12 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
-    // 페이지 이동을 위한 표준 JavaScript 함수
     function fn_link_page(pageNo){
         document.listForm.pageIndex.value = pageNo;
         document.listForm.action = "<c:url value='/admin/bookList.do'/>";
         document.listForm.submit();
     }
     
-    // 로그아웃 함수
     function out() {
         location.href = "<c:url value='/logout.do'/>";
     }
@@ -49,7 +47,7 @@
                                 <th scope="col">제목</th>
                                 <th scope="col">저자</th>
                                 <th scope="col">출판사</th>
-                                <th scope="col" class="text-center">상태</th>
+                                <th scope="col" class="text-center">상태 (현재/총)</th>
                                 <th scope="col" class="text-center">관리</th>
                             </tr>
                         </thead>
@@ -61,12 +59,13 @@
                                     <td>${book.author}</td>
                                     <td>${book.publisher}</td>
                                     <td class="text-center">
+                                        <%-- ✨ [변경] 수량을 기준으로 상태 표시 --%>
                                         <c:choose>
-                                            <c:when test="${book.status == 'available'}">
-                                                <span class="badge bg-success">대여 가능</span>
+                                            <c:when test="${book.currentQuantity > 0}">
+                                                <span class="badge bg-success">대여 가능 (${book.currentQuantity}/${book.totalQuantity})</span>
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="badge bg-danger">대여 중</span>
+                                                <span class="badge bg-danger">대여 불가 (${book.currentQuantity}/${book.totalQuantity})</span>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>

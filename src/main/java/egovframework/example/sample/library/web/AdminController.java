@@ -89,8 +89,6 @@ public class AdminController {
 	@RequestMapping(value="/addBook.do", method=RequestMethod.POST)
 	public String addBookForm(@ModelAttribute BookVO bookVO) throws Exception {
 		
-		bookVO.setStatus("available");
-		
 		bookService.insertBook(bookVO);
 		
 		return "redirect:/admin/bookList.do";

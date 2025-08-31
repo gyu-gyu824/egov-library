@@ -36,9 +36,15 @@ public interface BookMapper {
     
     int insertLoan(@Param("bookId") int bookId, @Param ("memberId") int memberId);
     
-    int modifyStatusBook(@Param("bookId") int bookId, @Param("memberId") int memberId);
+    int decreaseBookQuantity(int bookId);
     
-    int availableBook(@Param("bookId") int bookId, @Param("memberId") int memberId);
+    int increaseBookQuantity(int bookId);
+    
+    BookVO findBookByTitleAndAuthor(BookVO bookVO);
+    
+    int increaseBookStock(BookVO bookVO);
+    
+    
     
     
 }
