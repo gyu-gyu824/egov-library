@@ -115,13 +115,13 @@
     		<tr>
     			<td class="tbtd_caption"><label for="regUser"><spring:message code="title.sample.regUser" /></label></td>
     			<td class="tbtd_content">
-                    <c:if test="${registerFlag == 'modify'}">
+                    <%-- <c:if test="${registerFlag == 'modify'}"> --%>
         				<form:input path="regUser" maxlength="10" cssClass="essentiality" readonly="true" />
         				&nbsp;<form:errors path="regUser" /></td>
-                    </c:if>
+                    <%-- </c:if> --%>
                     <c:if test="${registerFlag != 'modify'}">
         				<form:input path="regUser" maxlength="10" cssClass="txt"  />
-        				&nbsp;<form:errors path="regUser" /></td>
+        				&nbsp;<form:errors path="regUser" />
                     </c:if>
     		</tr>
     	</table>
