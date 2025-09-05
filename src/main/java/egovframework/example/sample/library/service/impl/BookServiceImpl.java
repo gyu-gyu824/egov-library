@@ -119,4 +119,18 @@ public class BookServiceImpl extends EgovAbstractServiceImpl implements BookServ
 	public int increaseBookStock(BookVO bookVO) throws Exception {
 	    return bookMapper.increaseBookStock(bookVO);
 	}
+	
+    @Override
+    @Transactional
+    public void addBooksFromExcel(List<BookVO> bookList) throws Exception {
+        if (bookList == null) {
+            return;
+        }
+        for (int i = 0; i < bookList.size(); i++) {
+            BookVO bookVO = bookList.get(i);
+
+            bookMapper.insertBook(bookVO);
+        }
+    }
 }
+
