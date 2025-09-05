@@ -76,11 +76,7 @@ public class AdminController {
 		
 		return "redirect:/admin/bookList.do";
 	}
-	
 
-	
-
-	
 	@RequestMapping(value="/addBook.do", method=RequestMethod.GET)
 	public String addBook() throws Exception {
 		return "/library/admin/addBook";

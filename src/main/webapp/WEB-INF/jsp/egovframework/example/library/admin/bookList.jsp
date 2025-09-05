@@ -17,27 +17,47 @@
         document.listForm.submit();
     }
     
+    function fn_delete_book(bookId) {
+        if (confirm("정말 삭제하시겠습니까?")) {
+            const form = document.deleteForm;
+            form.bookId.value = bookId;
+            form.submit();
+        }
+    }
+    
     function out() {
         location.href = "<c:url value='/logout.do'/>";
     }
 </script>
 </head>
 <body>
-    <form:form modelAttribute="bookVO" name="listForm" id="listForm" method="get">
-        <div class="container mt-4">
-
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>🧑‍💼 관리자: 도서 목록 관리</h2>
-                <div>
-                    <a href="<c:url value='/bookLoan.do'/>" class="btn btn-outline-secondary">사용자 페이지로</a> 
-                    <a href="#" onclick="out()" class="btn btn-outline-danger">로그아웃</a>
-                </div>
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>🧑‍💼 관리자: 도서 목록 관리</h2>
+            <div>
+                <a href="<c:url value='/bookLoan.do'/>" class="btn btn-outline-secondary">사용자 페이지로</a> 
+                <a href="#" onclick="out()" class="btn btn-outline-danger">로그아웃</a>
             </div>
+        </div>
 
-            <div class="d-flex justify-content-end mb-3">
-                <a href="<c:url value='/admin/addBook.do'/>" class="btn btn-primary">📘 새 도서 등록</a>
+        <div class="d-flex justify-content-end mb-3">
+            <a href="<c:url value='/admin/addBook.do'/>" class="btn btn-primary">📘 새 도서 등록</a>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">엑셀로 일괄 등록</h5>
+                <form action="<c:url value='/uploadBookList.do'/>" method="post" enctype="multipart/form-data">
+                    <div class="input-group">
+                        <input type="file" name="excelFile" class="form-control" required="required" accept=".xlsx, .xls" />
+                        <button type="submit" class="btn btn-outline-primary">업로드</button>
+                    </div>
+                    <div class="form-text">양식: 제목 | 저자 | 출판사 | 총 수량 | 현재 수량</div>
+                </form>
             </div>
-            
+        </div>
+
+        <form:form modelAttribute="bookVO" name="listForm" id="listForm" method="get">
             <c:choose>
                 <c:when test="${not empty bookList}">
                     <table class="table table-hover align-middle">
@@ -59,7 +79,6 @@
                                     <td>${book.author}</td>
                                     <td>${book.publisher}</td>
                                     <td class="text-center">
-                                        <%-- ✨ [변경] 수량을 기준으로 상태 표시 --%>
                                         <c:choose>
                                             <c:when test="${book.currentQuantity > 0}">
                                                 <span class="badge bg-success">대여 가능 (${book.currentQuantity}/${book.totalQuantity})</span>
@@ -71,10 +90,8 @@
                                     </td>
                                     <td class="text-center">
                                         <a href="<c:url value='/admin/editBook.do?bookId=${book.bookId}'/>" class="btn btn-sm btn-outline-primary">수정</a>
-                                        <form action="<c:url value='/admin/deleteBook.do'/>" method="post" style="display: inline;" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                                            <input type="hidden" name="bookId" value="${book.bookId}">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">삭제</button>
-                                        </form>
+                                        
+                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="fn_delete_book(${book.bookId})">삭제</button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -93,7 +110,11 @@
             </div>
             
             <form:hidden path="pageIndex" />
-        </div>
-    </form:form>
+        </form:form>
+    </div>
+    
+    <form name="deleteForm" action="<c:url value='/admin/deleteBook.do'/>" method="post" style="display: none;">
+        <input type="hidden" name="bookId" />
+    </form>
 </body>
 </html>

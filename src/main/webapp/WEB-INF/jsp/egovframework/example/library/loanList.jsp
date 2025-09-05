@@ -108,7 +108,7 @@
 			</c:choose>
 		</div>
 	</form:form>
-	<form id="excelForm" action="<c:url value='/down-excel.do'/>" method="post" target="_blank">
+	<form id="excelForm" action="<c:url value='/downloadLoanHistory.do'/>" method="post" target="_blank">
     <input type="hidden" name="searchKeyword" value="${bookVO.searchKeyword}" />
     <input type="hidden" name="pageIndex" value="${bookVO.pageIndex}" />
     <!-- 필요한 다른 필드도 넣기 -->

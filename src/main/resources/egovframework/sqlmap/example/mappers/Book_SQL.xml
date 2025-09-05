@@ -223,7 +223,7 @@
 	
 	<update id="increaseBookStock" parameterType="bookVO" >
 		UPDATE book SET total_quantity = total_quantity + #{totalQuantity},
-						current_quantity = current_quantity + #{currentQuantity}
+						current_quantity = current_quantity + #{totalQuantity}
 		WHERE book_id = #{bookId}
 	</update>
 
