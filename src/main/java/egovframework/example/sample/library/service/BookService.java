@@ -2,8 +2,6 @@ package egovframework.example.sample.library.service;
 
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public interface BookService {
 	
 	int countAllBooks(BookVO bookVO) throws Exception;

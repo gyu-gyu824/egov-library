@@ -52,7 +52,7 @@
                         <input type="file" name="excelFile" class="form-control" required="required" accept=".xlsx, .xls" />
                         <button type="submit" class="btn btn-outline-primary">업로드</button>
                     </div>
-                    <div class="form-text">양식: 제목 | 저자 | 출판사 | 총 수량 | 현재 수량</div>
+                    <div class="form-text">양식: 제목 | 저자 | 출판사 | 총 수량 | 현재 수량 | (* 띄어쓰기 주의 *)</div>
                 </form>
             </div>
         </div>
@@ -116,5 +116,11 @@
     <form name="deleteForm" action="<c:url value='/admin/deleteBook.do'/>" method="post" style="display: none;">
         <input type="hidden" name="bookId" />
     </form>
+    	<form id="excelForm" action="<c:url value='/admin/downloadBookList.do'/>" method="post" target="_blank">
+    <input type="hidden" name="searchKeyword" value="${bookVO.searchKeyword}" />
+    <input type="hidden" name="pageIndex" value="${bookVO.pageIndex}" />
+    <!-- 필요한 다른 필드도 넣기 -->
+    <button type="submit" class="btn btn-outline-secondary">책 정보 출력</button>
+</form>
 </body>
 </html>

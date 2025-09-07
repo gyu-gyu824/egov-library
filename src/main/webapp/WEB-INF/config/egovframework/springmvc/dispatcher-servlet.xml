@@ -34,7 +34,7 @@
         <property name="paramName" value="language" />
     </bean>
 
-    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+<!--     <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
         <property name="defaultErrorView" value="cmmn/egovError"/>
         <property name="exceptionMappings">
             <props>
@@ -44,7 +44,7 @@
                 <prop key="org.springframework.security.AccessDeniedException">cmmn/egovError</prop>
             </props>
         </property>
-    </bean>
+    </bean> -->
     
    <!-- 엑셀 업로드 bean 등록  -->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

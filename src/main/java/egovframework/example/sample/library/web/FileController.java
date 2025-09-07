@@ -11,7 +11,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.http.HttpHeaders;
@@ -51,6 +50,7 @@ public class FileController {
 		int memberId = loginVO.getMemberId();
 		bookVO.setMemberId(memberId);
 		
+		bookVO.setFirstIndex(0); 
 		bookVO.setRecordCountPerPage(999999);
 		List<BookVO> loanHistory = bookService.selectLoanList(bookVO);
 		
@@ -146,5 +146,52 @@ public class FileController {
         return "redirect:/admin/bookList.do";
     }
     
+    @RequestMapping(value = "/admin/downloadBookList.do", method = RequestMethod.POST)
+	public ResponseEntity<byte[]> downloadBookList(BookVO bookVO, HttpServletRequest request) throws Exception {
+		
+		bookVO.setFirstIndex(0); 
+		bookVO.setRecordCountPerPage(999999);
+		List<BookVO> bookList = bookService.selectBookList(bookVO);
+		
+		String[] headers = {"책 아이디", "제목", "저자", "출판사", "상태", "현재 수량", "총 수량"};
+		
+		List<Map<String, Object>> dataList = new ArrayList<>();
+		for (int i = 0; i < bookList.size(); i++) {
+			BookVO record = bookList.get(i);
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("책 아이디", record.getBookId());
+			map.put("제목", record.getTitle());
+			map.put("저자",  record.getAuthor());
+			map.put("출판사",  record.getPublisher());
+			
+			String statusText;
+			if (record.getCurrentQuantity() > 0) {
+				statusText = "대여 가능";
+			} else {
+				statusText = "대여 불가";
+			}
+			map.put("상태", statusText);
+			
+			map.put("현재 수량",  record.getCurrentQuantity());
+			map.put("총 수량",  record.getTotalQuantity());
+
+			dataList.add(map);
+		}
+		
+		byte[] excelBytes = downloadService.createExcelFile(headers, dataList, "챙 정보");
+		
+		String fileName = "책 정보.xlsx";
+		String encodedFileName = java.net.URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+
+		HttpHeaders httpHeaders = new HttpHeaders();
+
+		
+		httpHeaders.add("Content-Disposition", "attachment; filename=\"" + encodedFileName + "\""); 
+		httpHeaders.add("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		
+		return new ResponseEntity<>(excelBytes, httpHeaders, HttpStatus.OK);
+	}
+		
     
 }

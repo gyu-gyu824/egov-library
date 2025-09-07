@@ -66,9 +66,9 @@
 		<error-code>404</error-code>
 		<location>/common/error.jsp</location>
 	</error-page>
-	<error-page>
+<!-- 	<error-page>
 		<error-code>500</error-code>
-		<location>/common/error.jsp</location>
-	</error-page>
+		<location>/WEB-INF/jsp/egovframework/example/cmmn/egovError.jsp</location>
+	</error-page> -->
     
 </web-app>
