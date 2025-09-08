@@ -55,7 +55,7 @@ public class BookServiceImpl extends EgovAbstractServiceImpl implements BookServ
 	@Override
 	@Transactional
 	public int insertBook(BookVO bookVO) throws Exception{
-		
+	    
 		BookVO existingBook = bookMapper.findBookByTitleAndAuthor(bookVO);
 		
 		if (existingBook != null) {
@@ -129,7 +129,7 @@ public class BookServiceImpl extends EgovAbstractServiceImpl implements BookServ
         for (int i = 0; i < bookList.size(); i++) {
             BookVO bookVO = bookList.get(i);
 
-            bookMapper.insertBook(bookVO);
+            this.insertBook(bookVO);
         }
     }
 }

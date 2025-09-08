@@ -217,8 +217,9 @@
 	<select id="findBookByTitleAndAuthor" parameterType="bookVO" resultMap="book">
 		SELECT *
 		FROM book
-		WHERE title=#{title} 
-		AND author=#{author}
+		WHERE TRIM(title) = TRIM(#{title} )
+		AND TRIM(author) = TRIM(#{author})
+		AND management_status = 'ACTIVE'
 	</select>
 	
 	<update id="increaseBookStock" parameterType="bookVO" >

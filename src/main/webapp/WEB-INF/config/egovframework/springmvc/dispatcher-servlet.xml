@@ -28,6 +28,9 @@
         </property>
     </bean>
     
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0"/>
+    
+    
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
     <!-- 쿠키를 이용한 Locale 이용시 <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/> -->
     <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
