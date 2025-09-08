@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import egovframework.example.sample.library.service.BookService;
 import egovframework.example.sample.library.service.BookVO;
+import egovframework.example.sample.library.service.UploadResultVO;
 
 @Service("bookService")
 public class BookServiceImpl extends EgovAbstractServiceImpl implements BookService {

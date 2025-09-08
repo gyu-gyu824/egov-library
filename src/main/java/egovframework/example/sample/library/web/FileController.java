@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import egovframework.example.sample.library.service.BookService;
 import egovframework.example.sample.library.service.BookVO;
 import egovframework.example.sample.library.service.LoginVO;
+import egovframework.example.sample.library.service.UploadResultVO;
 import egovframework.example.sample.library.service.UploadService;
 
 
@@ -97,44 +98,74 @@ public class FileController {
         }
         
         
-       
-        
+
         try {
             String[] bookHeaders = {"제목", "저자", "출판사", "총 수량", "현재 수량"};
             List<Row> rows = uploadService.getExcelRows(excelFile, bookHeaders);
             
+            UploadResultVO result = new UploadResultVO();
+            
             List<BookVO> bookList = new ArrayList<>();
             for (int i = 0; i < rows.size(); i++) {
                 Row row = rows.get(i);
-                BookVO bookVO = new BookVO();
-                	
-                if (row.getCell(0) != null) {
-                	bookVO.setTitle(row.getCell(0).getStringCellValue());
-                }
-                if (row.getCell(1) != null) {
-                	bookVO.setAuthor(row.getCell(1).getStringCellValue());
-                }
-                if (row.getCell(2) != null) {
-                	bookVO.setPublisher(row.getCell(2).getStringCellValue());
-                }
+                int currentRowNum = i + 2;
                 
-                if (row.getCell(3) != null && row.getCell(3).getCellType() == CellType.NUMERIC) {
-                    bookVO.setTotalQuantity((int) row.getCell(3).getNumericCellValue());
-                } else {
-                	continue;
+                try {
+                    BookVO bookVO = new BookVO();
+                	
+                    if (row.getCell(0) != null) {
+                    	bookVO.setTitle(row.getCell(0).getStringCellValue());
+                    } else {
+                    	result.addFailure(currentRowNum, "제목이 비어있습니다");
+                    	continue;
+                    }
+                    if (row.getCell(1) != null) {
+                    	bookVO.setAuthor(row.getCell(1).getStringCellValue());
+                    } else {
+                    	result.addFailure(currentRowNum, "저자가 비어있습니다");
+                    	continue;
+                    }
+                    if (row.getCell(2) != null) {
+                    	bookVO.setPublisher(row.getCell(2).getStringCellValue());
+                    } else {
+                    	result.addFailure(currentRowNum, "출반사가 비어있습니다");
+                    	continue;
+                    }
+                    
+                    if (row.getCell(3) != null && row.getCell(3).getCellType() == CellType.NUMERIC) {
+                        bookVO.setTotalQuantity((int) row.getCell(3).getNumericCellValue());
+                    } else {
+                    	result.addFailure(currentRowNum, "총 수량이 숫자가 아니거나 비어있습니다");
+                    	continue;
+                    }
+
+                    if (row.getCell(4) != null && row.getCell(4).getCellType() == CellType.NUMERIC) {
+                        bookVO.setCurrentQuantity((int) row.getCell(4).getNumericCellValue());
+                    } else {
+                    	result.addFailure(currentRowNum, "현재 수량이 숫자가 아니거나 비어있습니다");
+                    	continue;
+                    }
+                    bookList.add(bookVO);
+                } catch (Exception e) {
+                	result.addFailure(currentRowNum,"알 수 없는 오류 (" + e.getMessage() + ")");
                 }
 
-                if (row.getCell(4) != null && row.getCell(4).getCellType() == CellType.NUMERIC) {
-                    bookVO.setCurrentQuantity((int) row.getCell(4).getNumericCellValue());
-                } else {
-                	continue;
-                }
-                bookList.add(bookVO);
+            }
+            if (!bookList.isEmpty()) {
+                bookService.addBooksFromExcel(bookList);
+                result.setSuccessCount(bookList.size());
             }
             
-            bookService.addBooksFromExcel(bookList);
-            
-            redirectAttributes.addFlashAttribute("successMessage", bookList.size() + "개의 도서가 성공적으로 처리되었습니다.");
+            StringBuilder messages = new StringBuilder();
+            messages.append("총" + result.getSuccessCount() + "권이 등록되었습니다");
+                  
+            if (result.hasFailures()) {
+                messages.append(result.getFailureCount() + "건의 데이터는 실패했습니다.<br><strong>실패 목록:</strong><br>");
+                messages.append(String.join("<br>", result.getFailureMessages()));
+                redirectAttributes.addFlashAttribute("errorMessage", messages.toString());
+            } else {
+                redirectAttributes.addFlashAttribute("successMessage", messages.toString());
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
