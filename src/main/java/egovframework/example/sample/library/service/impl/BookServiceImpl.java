@@ -135,18 +135,17 @@ public class BookServiceImpl extends EgovAbstractServiceImpl implements BookServ
     
     @Override
     @Transactional
-    public void returnOverdueLoans() throws Exception {
-
-        List<BookVO> overdueList = bookMapper.returnOverdueLoans();
-        
-        System.out.println("처리할 연체 건수: " + overdueList.size());
-        
-
-        for (int i = 0; i < overdueList.size(); i++) {
-            BookVO overdueLoan = overdueList.get(i);
-            
+    public void selectOverdueLoans() throws Exception {
+    	
+    	List<BookVO> overdueList = bookMapper.selectOverdueLoans();
+    	
+    	for (int i = 0; i < overdueList.size(); i++) {
+    		
+    		BookVO overdueLoan = overdueList.get(i);
+    		
             this.returnBook(overdueLoan.getBookId(), overdueLoan.getMemberId());
-        }
+    	}
+    	
     }
 }
 
