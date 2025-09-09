@@ -28,6 +28,7 @@
         </property>
     </bean>
     
+    <!-- downLoad를 먼저 하기 위한 bean 설정 -->
     <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0"/>
     
     
@@ -43,7 +44,7 @@
             <props>
                 <prop key="org.springframework.dao.DataAccessException">cmmn/dataAccessFailure</prop>
                 <prop key="org.springframework.transaction.TransactionException">cmmn/transactionFailure</prop>
-                <prop key="org.egovframe.rte.fdl.cmmn.exception.EgovBizException">cmmn/egovError</prop>
+                <prop key="org.egovframe.rte.fdl.cmmn.except ion.EgovBizException">cmmn/egovError</prop>
                 <prop key="org.springframework.security.AccessDeniedException">cmmn/egovError</prop>
             </props>
         </property>

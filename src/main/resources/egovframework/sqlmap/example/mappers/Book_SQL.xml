@@ -213,19 +213,35 @@
 		1
 		WHERE book_id = #{bookId} AND current_quantity > 0
 	</update>
-	
-	<select id="findBookByTitleAndAuthor" parameterType="bookVO" resultMap="book">
+
+	<select id="findBookByTitleAndAuthor" parameterType="bookVO"
+		resultMap="book">
 		SELECT *
 		FROM book
 		WHERE TRIM(title) = TRIM(#{title} )
-		AND TRIM(author) = TRIM(#{author})
+		AND
+		TRIM(author) = TRIM(#{author})
 		AND management_status = 'ACTIVE'
 	</select>
-	
-	<update id="increaseBookStock" parameterType="bookVO" >
-		UPDATE book SET total_quantity = total_quantity + #{totalQuantity},
-						current_quantity = current_quantity + #{totalQuantity}
-		WHERE book_id = #{bookId}
+
+	<update id="increaseBookStock" parameterType="bookVO">
+		UPDATE
+		book SET total_quantity = total_quantity + #{totalQuantity},
+		current_quantity = current_quantity + #{totalQuantity}
+		WHERE book_id =
+		#{bookId}
 	</update>
+
+	<select id="selectOverdueLoans" resultMap="bookWithLoanInfo">
+		SELECT
+		l.book_id,
+		l.member_id
+		FROM
+		loan l
+		WHERE
+		l.status = 'loaned'
+		AND
+		l.loan_date &lt; DATE_SUB(NOW(), INTERVAL 10 DAY)
+	</select>
 
 </mapper>

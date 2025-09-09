@@ -7,4 +7,6 @@ import egovframework.example.sample.library.service.LoginVO;
 @Mapper("loginMapper")
 public interface LoginMapper {
 	LoginVO selectLoginUser (LoginVO loginVO);
+	
+	LoginVO selectUserByUsername(String username);
 }

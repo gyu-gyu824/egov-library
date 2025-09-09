@@ -19,7 +19,9 @@
 	
 	<insert id="insertMember" parameterType="memberVO" useGeneratedKeys="true" keyProperty="memberId">
 		INSERT INTO member (username, password, name, phone, role)
-		VALUES (#{username}, #{password}, #{name}, #{phone}, #{role})
+		VALUES (#{username}, #{password}, #{name}, #{phone}, 'user')
 	</insert>
+
+	
 	
 	</mapper>

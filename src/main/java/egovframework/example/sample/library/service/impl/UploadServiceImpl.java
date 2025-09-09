@@ -56,4 +56,3 @@ public class UploadServiceImpl extends EgovAbstractServiceImpl implements Upload
 		return rowList;
 	}
 }
-

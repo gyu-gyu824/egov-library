@@ -38,7 +38,14 @@ public class libraryController {
 
 	
 	@RequestMapping(value = "/bookLoan.do")
-	public String library(Model model, BookVO bookVO) throws Exception {
+	public String library(HttpServletRequest request, Model model, BookVO bookVO) throws Exception {
+		
+		HttpSession session = request.getSession();
+		LoginVO loginVO = (LoginVO) session.getAttribute("loginVO");
+		
+		if (loginVO == null) {
+			return "redirect:/login.do";
+		}
 		
 		PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo(bookVO.getPageIndex());

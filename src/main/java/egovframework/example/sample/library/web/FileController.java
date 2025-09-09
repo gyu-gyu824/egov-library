@@ -143,7 +143,7 @@ public class FileController {
                         bookVO.setCurrentQuantity((int) row.getCell(4).getNumericCellValue());
                     } else {
                     	result.addFailure(currentRowNum, "현재 수량이 숫자가 아니거나 비어있습니다");
-                    	continue;
+                    	continue; 
                     }
                     bookList.add(bookVO);
                 } catch (Exception e) {

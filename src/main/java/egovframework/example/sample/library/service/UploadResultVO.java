@@ -24,7 +24,7 @@ public class UploadResultVO {
         return this.failureMessages.size();
     }
     
-    public boolean hasFailures() {
+    public boolean hasFailures() { 
         return !this.failureMessages.isEmpty();
     }
 }

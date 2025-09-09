@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import egovframework.example.sample.library.service.BookService;
 import egovframework.example.sample.library.service.BookVO;
-import egovframework.example.sample.library.service.UploadResultVO;
 
 @Service("bookService")
 public class BookServiceImpl extends EgovAbstractServiceImpl implements BookService {
@@ -131,6 +130,22 @@ public class BookServiceImpl extends EgovAbstractServiceImpl implements BookServ
             BookVO bookVO = bookList.get(i);
 
             this.insertBook(bookVO);
+        }
+    }
+    
+    @Override
+    @Transactional
+    public void returnOverdueLoans() throws Exception {
+
+        List<BookVO> overdueList = bookMapper.returnOverdueLoans();
+        
+        System.out.println("처리할 연체 건수: " + overdueList.size());
+        
+
+        for (int i = 0; i < overdueList.size(); i++) {
+            BookVO overdueLoan = overdueList.get(i);
+            
+            this.returnBook(overdueLoan.getBookId(), overdueLoan.getMemberId());
         }
     }
 }

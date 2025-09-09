@@ -44,6 +44,8 @@ public interface BookMapper {
     
     int increaseBookStock(BookVO bookVO);
     
+    void returnOverdueLoans(BookVO bookVO);
+    
     
     
     

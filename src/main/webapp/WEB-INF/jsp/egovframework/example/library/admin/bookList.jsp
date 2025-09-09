@@ -38,51 +38,41 @@
 		<div class="d-flex justify-content-between align-items-center mb-4">
 			<h2>🧑‍💼 관리자: 도서 목록 관리</h2>
 			<div>
-				<a href="<c:url value='/bookLoan.do'/>"
-					class="btn btn-outline-secondary">사용자 페이지로</a> <a href="#"
-					onclick="out()" class="btn btn-outline-danger">로그아웃</a>
+				<a href="<c:url value='/bookLoan.do'/>" class="btn btn-outline-secondary">사용자 페이지로</a> 
+				<a href="#" onclick="out()" class="btn btn-outline-danger">로그아웃</a>
 			</div>
 		</div>
 
 		<c:if test="${not empty successMessage}">
-			<div class="alert alert-success alert-dismissible fade show"
-				role="alert">
+			<div class="alert alert-success alert-dismissible fade show" role="alert">
 				${successMessage}
-				<button type="button" class="btn-close" data-bs-dismiss="alert"
-					aria-label="Close"></button>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>
 		</c:if>
 		<c:if test="${not empty errorMessage}">
-			<div class="alert alert-danger alert-dismissible fade show"
-				role="alert">
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
 				${errorMessage}
-				<button type="button" class="btn-close" data-bs-dismiss="alert"
-					aria-label="Close"></button>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>
 		</c:if>
 		<div class="d-flex justify-content-end mb-3">
-			<a href="<c:url value='/admin/addBook.do'/>" class="btn btn-primary">📘
-				새 도서 등록</a>
+			<a href="<c:url value='/admin/addBook.do'/>" class="btn btn-primary">📘 새 도서 등록</a>
 		</div>
 
 		<div class="card mb-4">
 			<div class="card-body">
 				<h5 class="card-title">엑셀로 일괄 등록</h5>
-				<form action="<c:url value='/uploadBookList.do'/>" method="post"
-					enctype="multipart/form-data">
+				<form action="<c:url value='/uploadBookList.do'/>" method="post" enctype="multipart/form-data">
 					<div class="input-group">
-						<input type="file" name="excelFile" class="form-control"
-							required="required" accept=".xlsx, .xls" />
+						<input type="file" name="excelFile" class="form-control" required="required" accept=".xlsx, .xls" />
 						<button type="submit" class="btn btn-outline-primary">업로드</button>
 					</div>
-					<div class="form-text">양식: 제목 | 저자 | 출판사 | 총 수량 | 현재 수량 | (*
-						띄어쓰기 주의 *)</div>
+					<div class="form-text">양식: 제목 | 저자 | 출판사 | 총 수량 | 현재 수량 | (* 띄어쓰기 주의 *)</div>
 				</form>
 			</div>
 		</div>
 
-		<form:form modelAttribute="bookVO" name="listForm" id="listForm"
-			method="get">
+		<form:form modelAttribute="bookVO" name="listForm" id="listForm" method="get">
 			<c:choose>
 				<c:when test="${not empty bookList}">
 					<table class="table table-hover align-middle">
@@ -103,22 +93,20 @@
 									<td>${book.title}</td>
 									<td>${book.author}</td>
 									<td>${book.publisher}</td>
-									<td class="text-center"><c:choose>
+									<td class="text-center">
+										<c:choose>
 											<c:when test="${book.currentQuantity > 0}">
-												<span class="badge bg-success">대여 가능
-													(${book.currentQuantity}/${book.totalQuantity})</span>
+												<span class="badge bg-success">대여 가능 (${book.currentQuantity}/${book.totalQuantity})</span>
 											</c:when>
 											<c:otherwise>
-												<span class="badge bg-danger">대여 불가
-													(${book.currentQuantity}/${book.totalQuantity})</span>
+												<span class="badge bg-danger">대여 불가 (${book.currentQuantity}/${book.totalQuantity})</span>
 											</c:otherwise>
-										</c:choose></td>
-									<td class="text-center"><a
-										href="<c:url value='/admin/editBook.do?bookId=${book.bookId}'/>"
-										class="btn btn-sm btn-outline-primary">수정</a>
-
-										<button type="button" class="btn btn-sm btn-outline-danger"
-											onclick="fn_delete_book(${book.bookId})">삭제</button></td>
+										</c:choose>
+									</td>
+									<td class="text-center">
+										<a href="<c:url value='/admin/editBook.do?bookId=${book.bookId}'/>" class="btn btn-sm btn-outline-primary">수정</a>
+										<button type="button" class="btn btn-sm btn-outline-danger" onclick="fn_delete_book(${book.bookId})">삭제</button>
+									</td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -132,27 +120,20 @@
 			</c:choose>
 
 			<div class="d-flex justify-content-center">
-				<ui:pagination paginationInfo="${paginationInfo}" type="bootstrap"
-					jsFunction="fn_link_page" />
+				<ui:pagination paginationInfo="${paginationInfo}" type="bootstrap" jsFunction="fn_link_page" />
 			</div>
 
 			<form:hidden path="pageIndex" />
-		</form:form>
-	</div>
-
-	<form name="deleteForm" action="<c:url value='/admin/deleteBook.do'/>"
-		method="post" style="display: none;">
+		</form:form> <div class="text-end my-3">
+			<form id="excelForm" action="<c:url value='/admin/downloadBookList.do'/>" method="post" target="_blank">
+				<input type="hidden" name="searchKeyword" value="${bookVO.searchKeyword}" />
+				<input type="hidden" name="pageIndex" value="${bookVO.pageIndex}" />
+				<button type="submit" class="btn btn-success">책 정보 출력</button>
+			</form>
+		</div>
+		</div> <form name="deleteForm" action="<c:url value='/admin/deleteBook.do'/>" method="post" style="display: none;">
 		<input type="hidden" name="bookId" />
 	</form>
-	<form id="excelForm"
-		action="<c:url value='/admin/downloadBookList.do'/>" method="post"
-		target="_blank">
-		<input type="hidden" name="searchKeyword"
-			value="${bookVO.searchKeyword}" />
-		<input type="hidden" name="pageIndex" value="${bookVO.pageIndex}" />
-		<!-- 필요한 다른 필드도 넣기 -->
-		<button type="submit" class="btn btn-outline-secondary">책 정보
-			출력</button>
-	</form>
+
 </body>
 </html>
