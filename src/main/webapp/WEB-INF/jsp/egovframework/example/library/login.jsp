@@ -19,6 +19,12 @@
 			<main class="form-signin">
 				<h1 class="h3 mb-3 fw-normal text-center">로그인</h1>
 				<%-- 로그인 폼 --%>
+				
+				<c:if test="${not empty errorMessage}">
+				<div class="alert alert-danger">
+				${errorMessage}
+				</div>
+				</c:if>
 				<form action="<c:url value='/login.do'/>" method="post">
 					<div class="form-floating mb-3">
 						<input type="text" class="form-control" id="username"

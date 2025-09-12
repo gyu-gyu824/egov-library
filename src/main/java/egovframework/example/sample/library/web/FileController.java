@@ -38,7 +38,7 @@ public class FileController {
 
 	
     @RequestMapping(value = "/downloadLoanHistory.do", method = RequestMethod.POST)
-    public String downloadLoanHistory(BookVO bookVO, HttpServletRequest request, Model model) throws Exception {
+    public String downloadLoanHistory(BookVO bookVO, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
 
         // 1. 데이터 준비: '나의 대여 기록' 조회
         HttpSession session = request.getSession();
@@ -47,6 +47,12 @@ public class FileController {
         bookVO.setFirstIndex(0);
         bookVO.setRecordCountPerPage(999999);
         List<BookVO> loanHistory = bookService.selectLoanList(bookVO);
+        
+        if (loanHistory == null || loanHistory.isEmpty()) {
+        	 redirectAttributes.addFlashAttribute("errorMessage", "다운로드할 대여 기록이 없습니다.");
+             return "redirect:/loanList.do"; 
+         }
+        
 
         // 2. View에 전달할 데이터(헤더, 내용 등)를 Model에 담습니다.
         model.addAttribute("fileName", "나의_대여_기록");
@@ -63,7 +69,7 @@ public class FileController {
             map.put("제목", book.getTitle());
             map.put("저자", book.getAuthor());
             
-            // ✨ [스타일 변경] 삼항 연산자를 if-else문으로 변경
+
             if (book.getLoanDate() != null) {
                 map.put("대여일", sdf.format(book.getLoanDate()));
             } else {
@@ -157,10 +163,10 @@ public class FileController {
             }
             
             StringBuilder messages = new StringBuilder();
-            messages.append("총" + result.getSuccessCount() + "권이 등록되었습니다");
+            messages.append("총" + result.getSuccessCount() + "권이 등록되었습니다.");
                   
             if (result.hasFailures()) {
-                messages.append(result.getFailureCount() + "건의 데이터는 실패했습니다.<br><strong>실패 목록:</strong><br>");
+                messages.append("<br>" + result.getFailureCount()  + "건의 데이터는 실패했습니다<br><strong>실패 목록:</strong><br>");
                 messages.append(String.join("<br>", result.getFailureMessages()));
                 redirectAttributes.addFlashAttribute("errorMessage", messages.toString());
             } else {

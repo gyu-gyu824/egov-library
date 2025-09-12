@@ -39,8 +39,9 @@ public interface BookService {
     void addBooksFromExcel(List<BookVO> bookList) throws Exception;
     
     void selectOverdueLoans() throws Exception;
-
-
-
-	
+    
+    List<BookVO> checkNotification(int memberId) throws Exception;
+    
+    
+    
 }

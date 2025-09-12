@@ -13,10 +13,18 @@ import egovframework.example.sample.library.service.LoginVO;
 public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginService {
 	
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
+    
+    
 	
 	@Resource(name="loginMapper")
 	private LoginMapper loginMapper;
+	
+	
+	@Override 
+	public LoginVO selectByUsername(LoginVO loginVO) throws Exception{
+		return loginMapper.selectUserByUsername(loginVO.getUsername());
+	}
+	
 	
 	@Override
 	public LoginVO selectLoginUser(LoginVO loginVO) throws Exception {

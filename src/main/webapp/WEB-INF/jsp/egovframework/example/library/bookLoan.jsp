@@ -16,7 +16,19 @@
             document.listForm.action = "<c:url value='/bookLoan.do'/>";
             document.listForm.submit();
         }
+        
+        
+        
         function fn_search() {
+        	
+        	 const searchKeyword = $("#searchKeyword").val();
+
+            if (searchKeyword.trim().length === 0) {
+                alert("검색어를 입력해주세요.");
+
+                $("#searchKeyword").val(""); 
+                return; 
+            }
             document.listForm.pageIndex.value = 1;
             document.listForm.submit();
         }
@@ -38,15 +50,8 @@
         <div class="container mt-4">
             <h2 class="mb-4">📚 도서 대여 관리 시스템</h2>
 
-            <nav class="mb-4">
-                <a href="<c:url value='/bookLoan.do'/>" class="btn btn-primary me-2">도서 목록</a> 
-                <a href="<c:url value='/myLoans.do'/>" class="btn btn-outline-secondary">대여 현황</a> 
-                <a href="<c:url value='/loanList.do'/>" class="btn btn-outline-secondary">대여 기록</a> 
-                <a href="#" onclick="out()" class="btn btn-outline-danger">로그아웃</a>
-           	<c:if test="${not empty sessionScope.loginVO && sessionScope.loginVO.role eq 'admin'}">
-   				<a href="<c:url value='/admin/bookList.do'/>" class="btn btn-outline-danger ms-2">도서 관리</a>
-			</c:if>
-            </nav>
+			<c:import
+				url="/WEB-INF/jsp/egovframework/example/library/layout/header.jsp" />
 
             <div class="input-group mb-3">
                 <form:input path="searchKeyword" cssClass="form-control" placeholder="도서 제목 또는 저자를 입력하세요" />

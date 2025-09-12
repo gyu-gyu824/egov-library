@@ -2,6 +2,7 @@ package egovframework.example.sample.library.web;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -180,5 +181,22 @@ public class libraryController {
 		
 		return "/library/loanList";
 	}
+	
+    @RequestMapping(value = "/getNotifications.do", method = RequestMethod.POST)
+    @ResponseBody // ✨ 이 메서드가 반환하는 List<BookVO>를 JSON 데이터로 변환
+    public List<BookVO> getNotifications(HttpServletRequest request) throws Exception {
+        
+        HttpSession session = request.getSession();
+        LoginVO loginVO = (LoginVO) session.getAttribute("loginVO");
+        
+        if (loginVO != null) {
+            // Service를 호출하여 처리되지 않은 알림 목록을 가져옵니다.
+            return bookService.checkNotification(loginVO.getMemberId());
+        }
+        
+        // 로그인하지 않은 경우 빈 목록을 반환합니다.
+        return new ArrayList<>(); 
+    }
+	
 	
 }

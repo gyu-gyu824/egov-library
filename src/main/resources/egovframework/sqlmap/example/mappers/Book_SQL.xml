@@ -76,7 +76,7 @@
 		<where>
 			l.member_id = #{memberId} AND l.status = 'loaned'
 			<if test="searchKeyword != null and searchKeyword != ''">
-				AND (b.title LIKE CONCAT('%', #{searchKeyword}, '%')
+				AND b.title LIKE CONCAT('%', #{searchKeyword}, '%')
 				OR
 				b.author LIKE CONCAT('%', #{searchKeyword}, '%'))
 			</if>
@@ -226,8 +226,10 @@
 
 	<update id="increaseBookStock" parameterType="bookVO">
 		UPDATE
-		book SET total_quantity = total_quantity + #{totalQuantity},
-		current_quantity = current_quantity + #{totalQuantity}
+		book SET
+		total_quantity = total_quantity + #{totalQuantity},
+		current_quantity =
+		current_quantity + #{totalQuantity}
 		WHERE book_id =
 		#{bookId}
 	</update>
@@ -241,7 +243,26 @@
 		WHERE
 		l.status = 'loaned'
 		AND
-		l.loan_date &lt; DATE_SUB(NOW(), INTERVAL 10 DAY)
+		l.loan_date &lt;
+		DATE_SUB(NOW(), INTERVAL 7 DAY)
 	</select>
+
+	<select id="selectNotification" parameterType="int"
+		resultMap="bookWithLoanInfo">
+		SELECT l.loan_id, b.title
+		FROM loan l JOIN book b ON
+		l.book_id = b.book_id
+		WHERE l.member_id = #{memberId}
+		AND l.status =
+		'returned'
+		AND l.notification_checked = 0
+	</select>
+
+	<update id="returnNotification" parameterType="int">
+		UPDATE loan
+		SET notification_checked = 1
+		WHERE member_id = #{memberId} AND status = 'returned' AND
+		notification_checked = 0
+	</update>
 
 </mapper>

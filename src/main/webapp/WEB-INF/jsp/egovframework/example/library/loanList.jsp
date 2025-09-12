@@ -20,6 +20,16 @@
         document.listForm.submit();
     }
     function fn_search() {
+    	
+   	 const searchKeyword = $("#searchKeyword").val();
+
+     if (searchKeyword.trim().length === 0) {
+         alert("검색어를 입력해주세요.");
+
+         $("#searchKeyword").val(""); 
+         return; 
+     }
+    	
         document.listForm.pageIndex.value = 1;
         document.listForm.submit();
     }
@@ -33,13 +43,14 @@
 	
 		<h2 class="mb-4">📜 나의 대여 기록</h2>
 
-		<nav class="mb-4">
-			<a href="<c:url value='/bookLoan.do'/>" class="btn btn-outline-secondary me-2">도서 목록</a> 
-			<a href="<c:url value='/myLoans.do'/>" class="btn btn-outline-secondary">대여 현황</a> 
-			<a href="<c:url value='/loanList.do'/>" class="btn btn-primary">대여 기록</a> 
-			<a href="#" onclick="out()" class="btn btn-outline-danger">로그아웃</a>
-		</nav>
-
+			<c:import
+				url="/WEB-INF/jsp/egovframework/example/library/layout/header.jsp" />
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                ${errorMessage}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </c:if>
 		<form:form modelAttribute="bookVO" name="listForm" id="listForm" method="get">
 			<div class="input-group mb-3">
 				<form:input path="searchKeyword" cssClass="form-control" placeholder="기록에서 책 제목 또는 저자 검색" />
@@ -107,6 +118,5 @@
 				<button type="submit" class="btn btn-success">대여 기록 출력</button>
 			</form>
 		</div>
-
 	</div> </body>
 </html>

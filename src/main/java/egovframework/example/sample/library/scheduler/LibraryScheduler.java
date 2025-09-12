@@ -1,4 +1,4 @@
-package egovframework.example.sample.library.web;
+package egovframework.example.sample.library.scheduler;
 
 import javax.annotation.Resource;
 

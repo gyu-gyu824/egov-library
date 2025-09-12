@@ -78,14 +78,14 @@ public class BookServiceImpl extends EgovAbstractServiceImpl implements BookServ
 		return bookMapper.deleteBook(bookId);
 	}
 	
-    @Override
-    @Transactional
-    public int returnBook(int bookId, int memberId) throws Exception{
-    	
-    	bookMapper.increaseBookQuantity(bookId);
-    	
-        return bookMapper.returnBook(bookId, memberId);
-    }
+	@Override
+	@Transactional
+	public int returnBook(int bookId, int memberId) throws Exception {
+	      
+	    bookMapper.increaseBookQuantity(bookId);
+	    
+	    return bookMapper.returnBook(bookId, memberId);
+	}
 	
 	@Override
 	@Transactional
@@ -136,16 +136,29 @@ public class BookServiceImpl extends EgovAbstractServiceImpl implements BookServ
     @Override
     @Transactional
     public void selectOverdueLoans() throws Exception {
-    	
-    	List<BookVO> overdueList = bookMapper.selectOverdueLoans();
-    	
-    	for (int i = 0; i < overdueList.size(); i++) {
-    		
-    		BookVO overdueLoan = overdueList.get(i);
-    		
+        
+        List<BookVO> overdueList = bookMapper.selectOverdueLoans();
+
+        
+        for (int i = 0; i < overdueList.size(); i++) {
+            BookVO overdueLoan = overdueList.get(i);
+            
             this.returnBook(overdueLoan.getBookId(), overdueLoan.getMemberId());
+        }
+
+    }
+    
+    @Override
+    @Transactional
+    public List<BookVO> checkNotification(int memberId) throws Exception{
+    	
+    	List<BookVO> notificationList = bookMapper.selectNotification(memberId);
+    	
+    	if (notificationList != null && !notificationList.isEmpty()) {
+    		bookMapper.returnNotification(memberId);
     	}
     	
+    	return notificationList;
     }
 }
 
