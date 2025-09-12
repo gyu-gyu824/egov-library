@@ -76,7 +76,7 @@
 		<where>
 			l.member_id = #{memberId} AND l.status = 'loaned'
 			<if test="searchKeyword != null and searchKeyword != ''">
-				AND b.title LIKE CONCAT('%', #{searchKeyword}, '%')
+				AND (b.title LIKE CONCAT('%', #{searchKeyword}, '%')
 				OR
 				b.author LIKE CONCAT('%', #{searchKeyword}, '%'))
 			</if>
