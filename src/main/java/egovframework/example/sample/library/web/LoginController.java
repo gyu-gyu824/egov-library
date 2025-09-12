@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import egovframework.example.sample.library.service.LoginService;
 import egovframework.example.sample.library.service.LoginVO;
@@ -37,15 +38,22 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/login.do")
-	public String login(HttpServletRequest request, LoginVO loginVO) throws Exception {
+	public String login(HttpServletRequest request, LoginVO loginVO, RedirectAttributes redirectAttributes) throws Exception {
+		
+		
 		LoginVO resultVO = loginService.selectLoginUser(loginVO);
+		
+		loginService.selectByUsername(loginVO);
 
 		if (resultVO != null) {
+	
 			HttpSession session = request.getSession();
 			session.setAttribute("loginVO", resultVO);
 			return "redirect:/bookLoan.do";
 		}
 		else {
+			
+			redirectAttributes.addFlashAttribute("errorMessage", "아이디 또는 비밀번호가 틀렸습니다");
 			return "redirect:/login.do";
 		}
 	}

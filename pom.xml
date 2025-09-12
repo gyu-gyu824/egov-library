@@ -15,6 +15,13 @@
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
+	
+		<parent>
+    	<groupId>org.springframework.boot</groupId>
+    	<artifactId>spring-boot-starter-parent</artifactId>
+    	<version>2.7.18</version>
+    	<relativePath/>
+	</parent>	
 
 	<properties>
 		<spring.maven.artifact.version>5.3.37</spring.maven.artifact.version>
@@ -64,17 +71,29 @@
 
 	<dependencies>
 		<!-- 표준프레임워크 실행환경 -->
+		<!-- .xls 지원 -->
 		    <dependency>
         <groupId>org.apache.poi</groupId>
         <artifactId>poi</artifactId>
-        <version>5.2.5</version> <!-- 버전을 5.2.5로 낮추는 것을 권장합니다 -->
+        <version>5.2.5</version> 
     </dependency>
-    <!-- .xlsx 지원을 위해 이 부분을 추가 -->
+    <!-- .xlsx 지원 -->
     <dependency>
         <groupId>org.apache.poi</groupId>
         <artifactId>poi-ooxml</artifactId>
         <version>5.2.5</version>
     </dependency>
+    <dependency>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>slf4j-api</artifactId>
+   		<version>1.7.32</version>
+	</dependency>
+
+	<dependency>
+    	<groupId>ch.qos.logback</groupId>
+    	<artifactId>logback-classic</artifactId>
+    	<version>1.2.11</version>
+	</dependency>
         <dependency>
 		    <groupId>org.egovframe.rte</groupId>
 		    <artifactId>org.egovframe.rte.ptl.mvc</artifactId>
@@ -178,7 +197,13 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-dbcp2</artifactId>
         <version>2.12.0</version> </dependency>
-
+	
+	<!-- security 버전 충돌 해결을 위한 commons 버전 추가-->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+			<version>2.12.0</version>
+		</dependency>
 
     	<dependency>
         	<groupId>mysql</groupId>
@@ -191,6 +216,12 @@
    	 		<artifactId>commons-fileupload</artifactId>
     		<version>1.4</version>
 		</dependency>
+		
+
+	<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-crypto</artifactId>
+	</dependency>
 	</dependencies>
 
 	<build>

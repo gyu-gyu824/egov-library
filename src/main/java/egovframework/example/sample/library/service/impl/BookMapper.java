@@ -44,8 +44,11 @@ public interface BookMapper {
     
     int increaseBookStock(BookVO bookVO);
     
+    List<BookVO> selectOverdueLoans();
     
+    List<BookVO> selectNotification(int memberId);
     
+    int returnNotification(int memberId);
     
 }
 
