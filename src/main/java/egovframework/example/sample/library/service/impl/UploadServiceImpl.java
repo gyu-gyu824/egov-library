@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -44,6 +45,10 @@ public class UploadServiceImpl extends EgovAbstractServiceImpl implements Upload
 				if (cell == null || !headers[i].equals(cell.getStringCellValue())) {
 					throw new Exception("엑셀 파일 양식이 올바르지 않습니다");
 				}
+				
+			    if (cell == null || cell.getCellType() == CellType.BLANK) {
+			        throw new Exception("엑셀 헤더가 비어있습니다. 헤더를 확인해주세요.");
+			    }
 			}
 			
 			for (int i = 1; i <= sheet.getLastRowNum(); i++) {

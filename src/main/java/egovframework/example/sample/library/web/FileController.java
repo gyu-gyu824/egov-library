@@ -98,12 +98,7 @@ public class FileController {
     @RequestMapping(value = "/uploadBookList.do", method = RequestMethod.POST)
     public String uploadBookList(@RequestParam("excelFile") MultipartFile excelFile, RedirectAttributes redirectAttributes) {
         
-        if (excelFile.isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "업로드할 엑셀 파일을 선택해주세요.");
-            return "redirect:/admin/bookList.do";
-        }
-        
-        String originalFilename = excelFile.getOriginalFilename();
+    	String originalFilename = excelFile.getOriginalFilename();
         if (originalFilename == null || 
            (!originalFilename.endsWith(".xlsx") && !originalFilename.endsWith(".xls"))) {
             
@@ -182,14 +177,15 @@ public class FileController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("errorMessage", "업로드 중 오류가 발생했습니다: ");
+            System.out.println("에러 메시지: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }  
         
         return "redirect:/admin/bookList.do";
     }
     
     @RequestMapping(value = "/admin/downloadBookList.do", method = RequestMethod.POST)
-    public String downloadBookList(BookVO bookVO, Model model) throws Exception { // ✨ 반환타입 String, 파라미터에 Model 추가
+    public String downloadBookList(BookVO bookVO, Model model) throws Exception {
         
         // 1. 엑셀에 담을 전체 데이터를 조회합니다.
         bookVO.setFirstIndex(0); 
