@@ -127,6 +127,7 @@ public class libraryController {
 		model.addAttribute("bookVO", bookVO);
 		model.addAttribute("paginationInfo", paginationInfo);
 		model.addAttribute("myLoanList", myLoanList);
+		System.out.println(myLoanList);
 		
 		return "/library/myLoan";
 		

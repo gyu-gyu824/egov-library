@@ -103,6 +103,13 @@ public class FileController {
             return "redirect:/admin/bookList.do";
         }
         
+        String originalFilename = excelFile.getOriginalFilename();
+        if (originalFilename == null || 
+           (!originalFilename.endsWith(".xlsx") && !originalFilename.endsWith(".xls"))) {
+            
+            redirectAttributes.addFlashAttribute("errorMessage", "엑셀 파일(.xlsx)만 업로드할 수 있습니다.");
+            return "redirect:/admin/bookList.do";
+        }
         
 
         try {
